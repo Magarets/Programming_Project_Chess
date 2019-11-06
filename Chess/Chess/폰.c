@@ -14,46 +14,46 @@ void Pone_move_White(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 	if (cmp != 1) {
 		//백색의 폰
 		if (Move_x < Now_x -1) {
-			printf("님 잘못감 ㅅㄱ Not cmp = 1");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (map[Move_x][Now_y] != '*') {
-			printf("거긴 말로 막혀있어서 못감");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x > Now_x - 1) {
-			printf("뒤로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x + 1 && Move_y == Now_y - 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x - 1 && Move_y == Now_y - 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 	}
 
 	else if (cmp == 1) {
 		if (Move_x < Now_x - 2) {
-			printf("님 잘못감 ㅅㄱ");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (map[Move_x][Move_y] != '*') {
-			printf("거긴 말로 막혀있어서 못감");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x > Now_x - 1) {
-			printf("뒤로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x + 1 && Move_y == Now_y - 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x - 1 && Move_y == Now_y - 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 	}
@@ -65,56 +65,55 @@ void Pone_move_Black(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 	if (cmp != 1) {
 		//흑색의 폰
 		if (Move_x > Now_x + 1) {
-			printf("님 잘못감 ㅅㄱ");
-			printf("Now_x : %d Move_x : %d", Now_x, Move_x);
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x + 1 && Move_y == Now_y + 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x - 1 && Move_y == Now_y + 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (map[Move_x][Now_y] != '*') {
-			printf("거긴 말로 막혀있어서 못감");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x < Now_x + 1) {
-			printf("뒤로 이동 못함");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		
 		else if (Move_x > Now_x + 2 || Move_x < Now_x && Move_y != Now_y) {
-			printf("좌우로 이동 못해요");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 	}
 
 	else if (cmp == 1) {
 		if (Move_x > Now_x + 2) {
-			printf("님 잘못감 ㅅㄱ 0\n");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (map[Move_x][Now_y] != '*') {
-			printf("거긴 말로 막혀있어서 못감 1\n");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x < Now_x + 1) {
-			printf("뒤로 이동 못함2\n");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x + 1 && Move_y == Now_y + 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함3\n");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x == Now_x - 1 && Move_y == Now_y + 1 && map[Move_x][Move_y] == '*') {
-			printf("거기로 이동 못함4\n");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		else if (Move_x > Now_x + 2 || Move_x < Now_x && Move_y != Now_y) {
-			printf("좌우로 이동 못해요");
+			printf("*****************Wrong*****************\n");
 			return;
 		}
 		
@@ -154,18 +153,23 @@ int main() {
 
 	//맵출력
 	while (Now_x < 7 && Now_y < 7) {
+		printf("***************************************\n");
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				printf("%c", map[i][j]);
+				printf("%3c", map[i][j]);
 			}
 			printf("\n");
 		}
-
+		printf("***************************************\n");
 		//현재 좌표
+		printf("Input Now Coordinate: ");
 		scanf("%d %d", &Now_x, &Now_y);
+		printf("***************************************\n");
 
 		//움직이는 좌표
+		printf("Input Move Coordinate: ");
 		scanf("%d %d", &Move_x, &Move_y);
+		printf("***************************************\n");
 		if (map[Now_x][Now_y] == 'P') {
 			if (Now_x == 6) {
 				cmp = 1;
@@ -183,6 +187,9 @@ int main() {
 				cmp = 2;
 			}
 			Pone_move_Black(cmp, Now_x, Now_y, Move_x, Move_y, map);
+		}
+		else {
+			printf("You don't input the pone's coordinate!\n");
 		}
 	}
 
