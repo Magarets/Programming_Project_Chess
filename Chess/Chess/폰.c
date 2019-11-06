@@ -14,10 +14,10 @@ void Pone_move_White(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 	if (cmp != 1) {
 		//백색의 폰
 		if (Move_x < Now_x -1) {
-			printf("님 잘못감 ㅅㄱ");
+			printf("님 잘못감 ㅅㄱ Not cmp = 1");
 			return;
 		}
-		else if (Move_x == Now_x - 1 && map[Move_x][Now_y] != '*') {
+		else if (map[Move_x][Now_y] != '*') {
 			printf("거긴 말로 막혀있어서 못감");
 			return;
 		}
@@ -36,15 +36,15 @@ void Pone_move_White(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 	}
 
 	else if (cmp == 1) {
-		if (Move_x > Now_x - 2) {
+		if (Move_x < Now_x - 2) {
 			printf("님 잘못감 ㅅㄱ");
 			return;
 		}
-		else if (Move_x == Now_x - 1 || Move_x == Now_x - 2 && map[Move_x][Move_y] != '*') {
+		else if (map[Move_x][Move_y] != '*') {
 			printf("거긴 말로 막혀있어서 못감");
 			return;
 		}
-		else if (Move_x < Now_x - 1) {
+		else if (Move_x > Now_x - 1) {
 			printf("뒤로 이동 못함");
 			return;
 		}
@@ -57,23 +57,16 @@ void Pone_move_White(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 			return;
 		}
 	}
+	map[Move_x][Move_y] = 'P';
+	map[Now_x][Now_y] = '*';
 }
 void Pone_move_Black(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char map[8][8]) {
 	//1. 폰 이동
-	printf("%d %d %d %d", Now_x, Now_y, Move_x, Move_y);
 	if (cmp != 1) {
 		//흑색의 폰
 		if (Move_x > Now_x + 1) {
 			printf("님 잘못감 ㅅㄱ");
 			printf("Now_x : %d Move_x : %d", Now_x, Move_x);
-			return;
-		}
-		else if (Move_x == Now_x + 1 && map[Move_x][Now_y] != '*') {
-			printf("거긴 말로 막혀있어서 못감");
-			return;
-		}
-		else if (Move_x < Now_x + 1) {
-			printf("뒤로 이동 못함");
 			return;
 		}
 		else if (Move_x == Now_x + 1 && Move_y == Now_y + 1 && map[Move_x][Move_y] == '*') {
@@ -84,6 +77,15 @@ void Pone_move_Black(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 			printf("거기로 이동 못함");
 			return;
 		}
+		else if (map[Move_x][Now_y] != '*') {
+			printf("거긴 말로 막혀있어서 못감");
+			return;
+		}
+		else if (Move_x < Now_x + 1) {
+			printf("뒤로 이동 못함");
+			return;
+		}
+		
 		else if (Move_x > Now_x + 2 || Move_x < Now_x && Move_y != Now_y) {
 			printf("좌우로 이동 못해요");
 			return;
@@ -124,42 +126,65 @@ void Pone_move_Black(int cmp, int Now_x, int Now_y, int Move_x, int Move_y, char
 int main() {
 
 	char map[8][8] = { 0 };
+
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			map[i][j] = '*';
 		}
 	}
-	map[2][0] = 'p';
-	map[2][1] = 'N';
-	//0행 : white, 1행 : black
-	int ponemovecount[2][8] = { 0 };
-	int Now_y, Move_y;
-	int Now_x, Move_x;
 
-	//맵출력
 	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			printf("%c", map[i][j]);
-		}
-		printf("\n");
+		map[1][i] = 'p';
+		map[6][i] = 'P';
 	}
 
-	//현재 좌표
-	scanf("%d %d", &Now_x, &Now_y);
-	//움직이는 좌표
-	scanf("%d %d", &Move_x, &Move_y);
-	//폰함수로 이동
-	
-	ponemovecount[1][0]++;
-	
-	Pone_move_Black(ponemovecount[1][0], Now_x, Now_y, Move_x, Move_y, map);
+	//흑색은 소문자, 백색은 대문자
+	map[0][0] = 'l';  map[7][0] = 'L';
+	map[0][1] = 'n';  map[7][1] = 'N';
+	map[0][2] = 'b';  map[7][2] = 'B';
+	map[0][3] = 'q';  map[7][3] = 'Q';
+	map[0][4] = 'k';  map[7][4] = 'K';
+	map[0][5] = 'b';  map[7][5] = 'B';
+	map[0][6] = 'n';  map[7][6] = 'N';
+	map[0][7] = 'l';  map[7][7] = 'L';
+
+	int cmp = 0; //폰함수의 움직임 확인
+	int Now_y = 0, Move_y = 0;
+	int Now_x = 0, Move_x = 0;
 
 	//맵출력
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			printf("%c", map[i][j]);
+	while (Now_x < 7 && Now_y < 7) {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				printf("%c", map[i][j]);
+			}
+			printf("\n");
 		}
-		printf("\n");
+
+		//현재 좌표
+		scanf("%d %d", &Now_x, &Now_y);
+
+		//움직이는 좌표
+		scanf("%d %d", &Move_x, &Move_y);
+		if (map[Now_x][Now_y] == 'P') {
+			if (Now_x == 6) {
+				cmp = 1;
+			}
+			else {
+				cmp = 2;
+			}
+			Pone_move_White(cmp, Now_x, Now_y, Move_x, Move_y, map);
+		}
+		else if (map[Now_x][Now_y] == 'p') {
+			if (Now_x == 1) {
+				cmp = 1;
+			}
+			else {
+				cmp = 2;
+			}
+			Pone_move_Black(cmp, Now_x, Now_y, Move_x, Move_y, map);
+		}
 	}
+
 	return 0;
 }
