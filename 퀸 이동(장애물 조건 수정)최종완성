@@ -1,0 +1,367 @@
+#include<stdio.h>
+
+void p1_Queen(int before_x, int before_y, int after_x, int after_y, char map[8][8]);
+void p2_Queen(int before_x, int before_y, int after_x, int after_y, char map[8][8]);
+
+int main()
+{
+	char map[8][8];
+	int i, j;
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			map[i][j] = 42;									    //* 빈 곳
+		}
+	}
+	map[7][3] = 81;												//Q퀸
+	map[7][4] = 75;											    //K킹 
+	for (i = 0; i < 8; i++) {									//P폰
+		map[6][i] = 80;
+	}
+	map[7][0] = 76;												//L룩
+	map[7][7] = 76;												//L룩
+	map[7][1] = 78;												//N나이트
+	map[7][6] = 78;												//N나이트
+	map[7][2] = 66;
+	map[7][5] = 66;
+	for (i = 0; i < 8; i++) {
+		map[1][i] = 112;
+	}
+	map[0][0] = 108;											//player_2 l룩
+	map[0][7] = 108;											//player_2 l룩
+	map[0][1] = 110;											//player_2 n나이트
+	map[0][6] = 110;											//player_2 n나이트
+	map[0][2] = 98;												//player_2 b비숍
+	map[0][5] = 98;												//player_2 b비숍
+	map[0][3] = 107;											//player_2 k킹
+	map[0][4] = 113;											//player_2 q퀸
+
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			printf("%c", map[i][j]);
+		}
+		printf("\n");
+	}
+	int before_x = 0, before_y = 0, after_x = 0, after_y = 0;
+	while (1) {
+		printf("옮기고 싶은 말의 좌표를 입력해주세요 : ");
+		scanf("%d %d", &before_x, &before_y);
+		printf("말을 옮길 위치의 좌표를 입력해주세요 : ");
+		scanf("%d %d", &after_x, &after_y);
+		if (map[before_x][before_y] == 81) {			//player1 이동 함수
+			p1_Queen(before_x, before_y, after_x, after_y, map);
+		}
+		else if (map[before_x][before_y] == 113) {		//player2 이동 함수
+			p2_Queen(before_x, before_y, after_x, after_y, map);
+		}
+		else {
+			printf("말이 없습니다. 다시 입력해주세요\n");
+		}
+		for (i = 0; i < 8; i++) {									//말 이동 후 맵 재출력
+			for (j = 0; j < 8; j++) {
+				printf("%c", map[i][j]);
+			}
+			printf("\n");
+		}
+	}
+	return 0;
+}
+
+void p1_Queen(int before_x, int before_y, int after_x, int after_y, char map[8][8])
+{
+	int a = 0;
+	int n[7] = { 1,2,3,4,5,6,7 };
+	int i;
+	int j;
+	for (i = 1; i < 9; i++) {										//퀸이 움직일 수 있는 범위를 걸러주는 조건
+		if (&map[after_x][after_y] - &map[before_x][before_y] == 9 * i || &map[after_x][after_y] - &map[before_x][before_y] == 7 * i ||
+			&map[after_x][after_y] - &map[before_x][before_y] == -9 * i || &map[after_x][after_y] - &map[before_x][before_y] == -7 * i ||
+			&map[after_x][after_y] - &map[before_x][before_y] == -8 * i || &map[after_x][after_y] - &map[before_x][before_y] == 8 * i) {
+			a = 1;
+		}
+	}
+	if (a == 1) {
+		if (map[after_x][after_y] == 81) {							//좌표를 현재 위치와 이동 위치를 같은 것으로 이동했을 경우를 걸러주는 조건
+			printf("말이 움직이지 않았음. 다시 입력하셈\n");
+			return;
+		}
+		if (before_x - after_x < 0) {								//퀸이 움직일 때 중간에 장애물이 있는지 검사해주는 조건
+			if (before_y - after_y < 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					for (j = before_y + 1; j < after_y; j++) {
+						if (map[i][j] != 42) { printf("장애물 있음1\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					for (j = before_y - 1; j > after_y; j--) {
+						if (map[i][j] != 42) { printf("장애물 있음2\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+			else if (before_y - after_y == 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					if (map[i][after_y] != 42) { printf("장애물 있음3\n"); return; }
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+		}
+		else if (before_x - after_x > 0) {
+			if (before_y - after_y < 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					for (j = before_y + 1; j < after_y; j++) {
+						if (map[i][j] != 42) { printf("장애물 있음4\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					for (j = before_y - 1; j > after_y; j--) {
+						if (map[i][j] != 42) { printf("장애물 있음5\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+			else if (before_y - after_y == 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					if (map[i][after_y] != 42) { printf("장애물 있음6\n"); return; }
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+		}
+		else if (before_x - after_x == 0) {
+			if (before_y - after_y < 0) {
+				for (i = before_y - 1; i > after_y; i--) {
+					if (map[after_x][i]) { printf("장애물 있음7\n"); return; }
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_y - 1; i > after_y; i--) {
+					if (map[after_x][i]) { printf("장애물 있음8\n"); return; }
+				}
+				if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 81;
+			}
+		}
+	}
+	else {
+		printf("움직일 수 없는 자리\n");
+	}
+}
+
+void p2_Queen(int before_x, int before_y, int after_x, int after_y, char map[8][8])
+{
+	int a = 0;
+	int n[7] = { 1,2,3,4,5,6,7 };
+	int i;
+	int j;
+	for (i = 1; i < 9; i++) {										//퀸이 움직일 수 있는 범위를 걸러주는 조건
+		if (&map[after_x][after_y] - &map[before_x][before_y] == 9 * i || &map[after_x][after_y] - &map[before_x][before_y] == 7 * i ||
+			&map[after_x][after_y] - &map[before_x][before_y] == -9 * i || &map[after_x][after_y] - &map[before_x][before_y] == -7 * i ||
+			&map[after_x][after_y] - &map[before_x][before_y] == -8 * i || &map[after_x][after_y] - &map[before_x][before_y] == 8 * i) {
+			a = 1;
+		}
+	}
+	if (a == 1) {
+		if (map[after_x][after_y] == 113) {							//좌표를 현재 위치와 이동 위치를 같은 것으로 이동했을 경우를 걸러주는 조건
+			printf("말이 움직이지 않았음. 다시 입력하셈\n");
+			return;
+		}
+		if (before_x - after_x < 0) {								//퀸이 움직일 때 중간에 장애물이 있는지 검사해주는 조건
+			if (before_y - after_y < 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					for (j = before_y + 1; j < after_y; j++) {
+						if (map[i][j] != 42) { printf("장애물 있음1\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					for (j = before_y - 1; j > after_y; j--) {
+						if (map[i][j] != 42) { printf("장애물 있음2\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+			else if (before_y - after_y == 0) {
+				for (i = before_x + 1; i < after_x; i++) {
+					if (map[i][after_y] != 42) { printf("장애물 있음3\n"); return; }
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+		}
+		else if (before_x - after_x > 0) {
+			if (before_y - after_y < 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					for (j = before_y + 1; j < after_y; j++) {
+						if (map[i][j] != 42) { printf("장애물 있음4\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					for (j = before_y - 1; j > after_y; j--) {
+						if (map[i][j] != 42) { printf("장애물 있음5\n"); return; }
+					}
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+			else if (before_y - after_y == 0) {
+				for (i = before_x - 1; i > after_x; i--) {
+					if (map[i][after_y] != 42) { printf("장애물 있음6\n"); return; }
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+		}
+		else if (before_x - after_x == 0) {
+			if (before_y - after_y < 0) {
+				for (i = before_y - 1; i > after_y; i--) {
+					if (map[after_x][i]) { printf("장애물 있음7\n"); return; }
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+			else if (before_y - after_y > 0) {
+				for (i = before_y - 1; i >= after_y; i--) {
+					if (map[after_x][i]) { printf("장애물 있음8\n"); return; }
+				}
+				if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {
+					printf("장애물 있음\n");
+					return;
+				}
+				else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {
+					printf("상대 말을 잡았습니다!\n");
+				}
+				map[before_x][before_y] = 42;
+				map[after_x][after_y] = 113;
+			}
+		}
+	}
+	else {
+		printf("움직일 수 없는 자리\n");
+	}
+}

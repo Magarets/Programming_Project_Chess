@@ -1,0 +1,118 @@
+#include<stdio.h>
+#pragma warning(disable:4996)
+
+void p1_King(int before_x, int before_y, int after_x, int after_y, char map[8][8]);
+void p2_King(int before_x, int before_y, int after_x, int after_y, char map[8][8]);
+
+int main()
+{
+	char map[8][8];
+	int i, j;
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			map[i][j] = 42;									    //* 빈 곳
+		}
+	}
+	map[7][3] = 81;												//Q퀸
+	map[7][4] = 75;											    //K킹 
+	for (i = 0; i < 8; i++) {									//P폰
+		map[6][i] = 80;
+	}
+	map[7][0] = 76;												//L룩
+	map[7][7] = 76;												//L룩
+	map[7][1] = 78;												//N나이트
+	map[7][6] = 78;												//N나이트
+	map[7][2] = 66;
+	map[7][5] = 66;
+	for (i = 0; i < 8; i++) {
+		map[1][i] = 112;
+	}
+	map[0][0] = 108;											//player_2 l룩
+	map[0][7] = 108;											//player_2 l룩
+	map[0][1] = 110;											//player_2 n나이트
+	map[0][6] = 110;											//player_2 n나이트
+	map[0][2] = 98;												//player_2 b비숍
+	map[0][5] = 98;												//player_2 b비숍
+	map[0][3] = 107;											//player_2 k킹  
+	map[0][4] = 113;											//player_2 q퀸
+
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			printf("%c", map[i][j]);
+		}
+		printf("\n");
+	}
+	int before_x = 0, before_y = 0, after_x = 0, after_y = 0;
+	while (1) {
+		printf("옮기고 싶은 말의 좌표를 입력해주세요 : ");
+		scanf("%d %d", &before_x, &before_y);
+		printf("말을 옮길 위치의 좌표를 입력해주세요 : ");
+		scanf("%d %d", &after_x, &after_y);
+		if (map[before_x][before_y] == 75) {			//player1 이동 함수
+			p1_King(before_x, before_y, after_x, after_y, map);
+		}
+		else if (map[before_x][before_y] == 107) {		//player2 이동 함수
+			p2_King(before_x, before_y, after_x, after_y, map);
+		}
+		else {
+			printf("말이 없습니다. 다시 입력해주세요\n");
+		}
+		for (i = 0; i < 8; i++) {								//말 이동 후 맵 재출력
+			for (j = 0; j < 8; j++) {
+				printf("%c", map[i][j]);
+			}
+			printf("\n");
+		}
+	}
+	return 0;
+}
+
+void p1_King(int before_x, int before_y, int after_x, int after_y, char map[8][8])    //player1 이동 함수
+{
+	int a = 0;
+	if (&map[before_x][before_y] - &map[after_x][after_y] == 1 || -1 || 8 || -8 || 9 || -9) { //킹 이동 범위 조건 체크
+		a = 1;
+	}
+	else {
+		printf("움직일 수 없습니다.\n");
+	}
+	if (a == 1) {
+		if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {          //이동할 곳에 player1의 말이 있을 경우 이동 불가
+			printf("움직일 수 없습니다.\n");
+		}
+		else if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {   //이동할 곳에 player2의 말이 있을 경우 잡았다는 메세지와 이동
+			printf("말을 잡았습니다!\n");
+			map[before_x][before_y] = 42;
+			map[after_x][after_y] = 75;
+		}
+		else if (map[after_x][after_y] == 42) {                                   //이동할 곳이 비어있을 경우 이동 가능
+			map[before_x][before_y] = 42;
+			map[after_x][after_y] = 75;
+		}
+	}
+}
+
+void p2_King(int before_x, int before_y, int after_x, int after_y, char map[8][8])      //player2 이동함수
+{
+	int a = 0;
+	if (&map[before_x][before_y] - &map[after_x][after_y] == 1 || -1 || 8 || -8 || 9 || -9) { //킹 이동범위 조건 체크 
+		a = 1;
+	}
+	else {
+		printf("움직일 수 없습니다.\n");
+	}
+	if (a == 1) {
+		if (map[after_x][after_y] >= 97 && map[after_x][after_y] <= 122) {        //이동할 곳에 player2의 말이 있을 경우 이동 불가
+			printf("움직일 수 없습니다.\n");
+		}
+		else if (map[after_x][after_y] >= 65 && map[after_x][after_y] <= 90) {    //이동할 곳에 player1의 말이 있을 경우 잡았다는 메세지와 이동
+			printf("말을 잡았습니다!\n"); 
+			map[before_x][before_y] = 42;
+			map[after_x][after_y] = 107;
+		}
+		else if (map[after_x][after_y] == 42) {                                   //이동할 곳이 비어있을 경우 이동 가능
+			map[before_x][before_y] = 42;
+			map[after_x][after_y] = 107;
+		}
+	}
+}
